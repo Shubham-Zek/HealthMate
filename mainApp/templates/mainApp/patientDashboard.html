@@ -1,0 +1,52 @@
+{% extends "mainApp/base.html" %}
+{% block main %}
+    <div class="flex flex-col items-center">
+        <div class="w-1/6">
+            <h1 class="text-3xl font-semibold text-center">Profile</h1>
+            <h2 class="text-xl font-semibold">Name: {{ user.username }}</h2>
+            <h2 class="text-xl font-semibold">Email: {{ user.email }}</h2>
+            <h2 class="text-xl font-semibold">Age: {{ user.patientprofile.age }}</h2>
+            <h2 class="text-xl font-semibold">Gender: {{ user.patientprofile.gender }}</h2>
+            <div class="flex justify-center gap-3 mt-3">
+                <button class="cursor-pointer rounded-full px-2 py-1 bg-neutral-300 text-black hover:bg-black hover:text-white"
+                        hx-get="{% url "editPatientProfile" %}">Edit Profile</button>
+            </div>
+        </div>
+        <hr>
+        <h1 class="text-3xl mt-10 font-semibold text-center">Appointments</h1>
+        <ul class="flex mt-2">
+            <li class="px-4 py-1 cursor-pointer hover:bg-white/50 {% if filter == "" %}bg-white text-black{% endif %}"
+                hx-get="{% url "patientDashboard" %}?filter=">All</li>
+            <li class="px-4 py-1 cursor-pointer hover:bg-white/50 {% if filter == "confirmed" %}bg-white text-black{% endif %}"
+                hx-get="{% url "patientDashboard" %}?filter=confirmed">Confirmed</li>
+            <li class="px-4 py-1 cursor-pointer hover:bg-white/50 {% if filter == "pending" %}bg-white text-black{% endif %}"
+                hx-get="{% url "patientDashboard" %}?filter=pending">Pending</li>
+            <li class="px-4 py-1 cursor-pointer hover:bg-white/50 {% if filter == "cancelled" %}bg-white text-black{% endif %}"
+                hx-get="{% url "patientDashboard" %}?filter=cancelled">Cancelled</li>
+        </ul>
+        <div class="w-full mt-5 flex justify-center gap-10">
+            {% for appointment in user.patientprofile.appointments.all|dictsortreversed:"status" %}
+                {% if filter == "" or filter == appointment.status|lower %}
+                    <div class="my-3 rounded-xl p-3 bg-white text-black">
+                        <h2 class="text-lg font-semibold">Doctor: {{ appointment.doctor }}</h2>
+                        <h2 class="text-lg font-semibold">Date: {{ appointment.date }}</h2>
+                        <h2 class="text-lg font-semibold">Time: {{ appointment.time }}</h2>
+                        <h2 class="text-lg font-semibold">Status: {{ appointment.status }}</h2>
+                        {% if appointment.status != 'Cancelled' %}
+                            <button class="cursor-pointer rounded-full px-2 py-1 bg-neutral-700/75 text-white hover:bg-black"
+                                    hx-get="{% url "cancelAppoinment" appointment.id %}">Cancel</button>
+                        {% endif %}
+                        {% if appointment.status == 'Cancelled' %}
+                            <button class="cursor-pointer rounded-full px-2 py-1 bg-neutral-700/75 text-white hover:bg-black"
+                                    hx-get="{% url "deleteAppoinment" appointment.id %}">Delete</button>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="flex justify-center gap-3 mt-3">
+            <button class="cursor-pointer rounded-full px-2 py-1 bg-neutral-300 text-black hover:bg-black hover:text-white"
+                    hx-get="{% url "appointment" %}">Add appointment</button>
+        </div>
+    </div>
+{% endblock main %}

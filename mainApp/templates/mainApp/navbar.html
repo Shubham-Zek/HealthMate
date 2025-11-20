@@ -1,0 +1,37 @@
+<nav class="flex justify-between my-2">
+    <ul class="flex bg-black rounded-full ms-2 sticky-top gap-1 p-1">
+        <li class="text-white hover:bg-white/25 hover:cursor-pointer {% if request.path == "/" %}bg-white/25{% endif %} rounded-full px-4 py-2"
+            hx-get="/">Home</li>
+        {% if "Doctor" in user.groups.all|join:', ' %}
+        <li class="text-white hover:bg-white/25 hover:cursor-pointer {% if request.path == '/doctor/' %}bg-white/25{% endif %} rounded-full px-4 py-2"
+        hx-get="{% url "doctorDashboard" %}">Doctor</li>
+        {% elif "Patient" in user.groups.all|join:', ' %}
+            <li class="text-white hover:bg-white/25 hover:cursor-pointer {% if request.path == '/patient/' %}bg-white/25{% endif %} rounded-full px-4 py-2"
+                hx-get="{% url "patientDashboard" %}">Patient</li>
+        {% endif %}
+    </ul>
+    <ul class="flex bg-black rounded-full me-4 sticky-top gap-1 p-1">
+        {% if user.is_authenticated %}
+            <li id="logoutCollapse"
+                class="text-white hover:bg-white/25 hover:cursor-pointer rounded-full px-4 py-2"
+                hx-get="{{ request.path }}"
+                hx-select="#logoutExpand"
+                hx-target="closest ul">👤 {{ user }}</li>
+        {% else %}
+            <li class="text-white hover:bg-white/25 hover:cursor-pointer {% if request.path == '/auth/login/' %}bg-white/25{% endif %} rounded-full px-4 py-2"
+                hx-get="{% url "login" %}">Login</li>
+            <li class="text-white hover:bg-white/25 hover:cursor-pointer {% if request.path == '/auth/signup/' %}bg-white/25{% endif %} rounded-full px-4 py-2"
+                hx-get="{% url "signup" %}">Signup</li>
+        {% endif %}
+    </ul>
+</nav>
+<ul class="hidden p-0">
+    <li id="logoutExpand"
+        class="text-white hover:bg-white/25 hover:cursor-pointer {% if request.path == '/adminLogout/' %}bg-white/25{% endif %} rounded-full px-4 py-2"
+        hx-get="{% url "logout" %}">Logout</li>
+    <li id="logoutExpand"
+        class="text-white hover:bg-white/25 hover:cursor-pointer {% if request.path == '/adminLogout/' %}bg-white/25{% endif %} rounded-full px-4 py-2"
+        hx-get="{{ request.path }}"
+        hx-target="closest ul"
+        hx-select="#logoutCollapse">👤 {{ user }}</li>
+</ul>

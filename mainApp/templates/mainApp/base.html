@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>HealthMate</title>
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.7/dist/htmx.min.js"
+                integrity="sha384-ZBXiYtYQ6hJ2Y0ZNoYuI+Nq5MqWBr+chMrS/RkXpNzQCApHEhOt2aY8EJgqwHLkJ"
+                crossorigin="anonymous"></script>
+    </head>
+    <body class="bg-neutral-800 text-white" hx-target="this" hx-push-url="true">
+        {% include "mainApp/navbar.html" %}
+        {% comment %} <ul class="messages flex justify-center" id="messages">
+            {% if messages %}
+                {% for message in messages %}
+                    <li hx-trigger="load delay:5s, click" hx-get="" hx-swap="delete" hx-target="#messages" {% if message.tags %}class="w-1/7 rounded-md text-lg p-1 bg-white text-center text-red-500/75"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            {% endif %}
+        </ul> {% endcomment %}
+        <main id="main">
+            {% block main %}
+                <h1 class="text-3xl font-extrabold text-center">HealthMate</h1>
+            {% endblock main %}
+        </main>
+    </body>
+</html>
